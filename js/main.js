@@ -1,9 +1,9 @@
 var dsnv = new DSNV();
+var validation = new Validation();
 function getEle(id) {
   return document.getElementById(id);
 }
 function layThongTinNV(isAdd) {
-  //Lấy thông tin từ user
   var taiKhoan = getEle("tknv").value;
   var hoTen = getEle("name").value;
   var email = getEle("email").value;
@@ -13,151 +13,115 @@ function layThongTinNV(isAdd) {
   var chucVu = getEle("chucvu").value;
   var gioLam = getEle("gioLam").value;
 
-  /**
-   * Validate
-   */
+  var isValid = true;
 
-  // form hợp lệ = true
-  // var isValid = true;
+  if (isAdd) {
+    isValid &=
+      validation.kiemTraRong(
+        taiKhoan,
+        "tbTKNV",
+        "(*) Vui lòng nhập Tài Khoản"
+      ) &&
+      validation.kiemTraDoDaiKiTu(
+        taiKhoan,
+        "tbTKNV",
+        "(*) Vui lòng nhập 4-6 kí số",
+        4,
+        6
+      ) &&
+      validation.kiemTraTaiKhoanTonTai(
+        taiKhoan,
+        "tbTKNV",
+        "(*) Tài khoản đã tồn tại",
+        dsnv.arr
+      );
+  }
 
-  // //check validation
+  isValid &=
+    validation.kiemTraRong(hoTen, "tbTen", "(*) Vui lòng nhập tên") &&
+    validation.kiemTraChuoiKiTu(hoTen, "tbTen", "(*) Vui lòng nhập đúng kí tự");
 
-  // if (isAdd) {
-  //   isValid &=
-  //     validation.kiemTraRong(
-  //       _maSV,
-  //       "errorMaSV",
-  //       "(*) Vui lòng nhập Mã Sinh Viên"
-  //     ) &&
-  //     validation.kiemTraDoDaiKiTu(
-  //       _maSV,
-  //       "errorMaSV",
-  //       "(*) Vui lòng nhập 2-10 kí tự",
-  //       2,
-  //       10
-  //     ) &&
-  //     validation.kiemTraMaSVTonTai(
-  //       _maSV,
-  //       "errorMaSV",
-  //       "(*) Mã Sinh Viên đã tồn tại",
-  //       dssv.arr
-  //     );
-  // }
+  isValid &=
+    validation.kiemTraRong(email, "tbEmail", "(*) Vui lòng nhập Email") &&
+    validation.kiemTraPattern(
+      email,
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      "tbEmail",
+      "(*) Vui lòng nhập email hợp lệ"
+    );
 
-  // isValid &=
-  //   validation.kiemTraRong(
-  //     _tenSV,
-  //     "errorTenSV",
-  //     "(*) Vui lòng nhập Tên Sinh Viên"
-  //   ) &&
-  //   validation.kiemTraDoDaiKiTu(
-  //     _tenSV,
-  //     "errorTenSV",
-  //     "(*) Vui lòng nhập 4-50 kí tự",
-  //     2,
-  //     10
-  //   ) &&
-  //   validation.kiemTraChuoiKiTu(
-  //     _tenSV,
-  //     "errorTenSV",
-  //     "(*) Vui lòng nhập đúng kí tự"
-  //   );
+  isValid &=
+    validation.kiemTraRong(
+      matKhau,
+      "tbMatKhau",
+      "(*) Vui lòng nhập Passwords"
+    ) &&
+    validation.kiemTraDoDaiKiTu(
+      matKhau,
+      "tbMatKhau",
+      "(*) Vui lòng nhập 6-10 kí tự",
+      6,
+      10
+    ) &&
+    validation.kiemTraPassword(
+      matKhau,
+      "tbMatKhau",
+      "(*) Vui lòng nhập ít nhất 1 ký tự số, 1 ký tự in hoa, 1 ký tự đặc biệt"
+    );
 
-  // isValid &=
-  //   validation.kiemTraRong(_email, "errorEmail", "(*) Vui lòng nhập Email") &&
-  //   validation.kiemTraPattern(
-  //     _email,
-  //     /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-  //     "errorEmail",
-  //     "(*) Vui lòng nhập email hợp lệ"
-  //   );
+  isValid &=
+    validation.kiemTraRong(ngayLam, "tbNgay", "(*) Vui lòng nhập Ngày Làm") &&
+    validation.kiemTraPattern(
+      ngayLam,
+      /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/\d{4}$/,
+      "tbNgay",
+      "(*) Vui lòng nhập thời gian hợp lệ"
+    );
 
-  // isValid &=
-  //   validation.kiemTraRong(
-  //     _matKhau,
-  //     "errorPass",
-  //     "(*) Vui lòng nhập Passwords"
-  //   ) &&
-  //   validation.kiemTraDoDaiKiTu(
-  //     _matKhau,
-  //     "errorPass",
-  //     "(*) Vui lòng nhập 8-16 kí tự",
-  //     8,
-  //     16
-  //   );
-
-  // isValid &= validation.kiemTraRong(
-  //   _ngaySinh,
-  //   "errorNgaySinh",
-  //   "(*) Vui lòng nhập Ngày Sinh"
-  // );
-
-  // isValid &= validation.kiemTraKhoaHoc(
-  //   "khSV",
-  //   "errorKhoaHoc",
-  //   "(*) Vui lòng chọn Khóa Học"
-  // );
-
-  // isValid &=
-  //   validation.kiemTraRong(
-  //     _toan,
-  //     "errorDiemToan",
-  //     "(*) Vui lòng nhập Điểm Toán"
-  //   ) &&
-  //   validation.kiemTraDoDaiKiTu(
-  //     _toan,
-  //     "errorDiemToan",
-  //     "(*) Vui lòng nhập 1-2 kí tự",
-  //     1,
-  //     2
-  //   );
-
-  // isValid &=
-  //   validation.kiemTraRong(_ly, "errorDiemLy", "(*) Vui lòng nhập Điểm Lý") &&
-  //   validation.kiemTraDoDaiKiTu(
-  //     _ly,
-  //     "errorDiemLy",
-  //     "(*) Vui lòng nhập 1-2 kí tự",
-  //     1,
-  //     2
-  //   );
-
-  // isValid &=
-  //   validation.kiemTraRong(
-  //     _hoa,
-  //     "errorDiemHoa",
-  //     "(*) Vui lòng nhập Điểm Hóa"
-  //   ) &&
-  //   validation.kiemTraDoDaiKiTu(
-  //     _hoa,
-  //     "errorDiemHoa",
-  //     "(*) Vui lòng nhập 1-2 kí tự",
-  //     1,
-  //     2
-  //   );
-
-  // if (isValid) {
-  //   //Tạo đối nv từ lớp đối tượng NhanVien
-
-  // }
-  // return null;
-
-  var nv = new NhanVien(
-    taiKhoan,
-    hoTen,
-    email,
-    matKhau,
-    ngayLam,
-    luongCB,
-    chucVu,
-    gioLam
+  isValid &= validation.kiemTraKhoaHoc(
+    "chucvu",
+    "tbChucVu",
+    "(*) Vui lòng chọn chức vụ"
   );
 
-  //Tinh Tong Luong
-  nv.tinhTongLuong();
-  nv.xepLoai;
+  isValid &=
+    validation.kiemTraRong(luongCB, "tbLuongCB", "(*) Vui lòng nhập Lương") &&
+    validation.kiemTraPattern(
+      luongCB,
+      /^(1\d{6}|20000000)$/,
+      "tbLuongCB",
+      "(*) Vui lòng nhập lương từ 1000000-20000000"
+    );
 
-  return nv;
+  isValid &=
+    validation.kiemTraRong(gioLam, "tbGiolam", "(*) Vui lòng nhập Giờ Làm") &&
+    validation.kiemTraPattern(
+      gioLam,
+      /^(8\d|9\d|1\d{2}|200)$/,
+      "tbGiolam",
+      "(*) Vui lòng nhập từ 80h-200h",
+      1,
+      2
+    );
+
+  if (isValid) {
+    var nv = new NhanVien(
+      taiKhoan,
+      hoTen,
+      email,
+      matKhau,
+      ngayLam,
+      luongCB,
+      chucVu,
+      gioLam
+    );
+
+    nv.tinhTongLuong();
+    nv.xepLoai;
+
+    return nv;
+  }
+  return null;
 }
 
 function renderTable(data) {
@@ -185,7 +149,7 @@ function renderTable(data) {
 
 getEle("btnThemNV").addEventListener("click", function (e) {
   e.preventDefault();
-  var nv = layThongTinNV();
+  var nv = layThongTinNV(true);
   if (nv) {
     dsnv.themNV(nv);
     renderTable(dsnv.arr);
@@ -209,14 +173,16 @@ function editSinhVien(taiKhoan) {
     getEle("gioLam").value = nv.gioLam;
   }
   getEle("btnThemNV").style.display = "none";
+  getEle("btnCapNhat").style.display = "block";
 }
 
 getEle("btnCapNhat").addEventListener("click", function (e) {
   e.preventDefault();
-  var nv = layThongTinNV();
+  var nv = layThongTinNV(false);
   dsnv.capNhatNV(nv);
   renderTable(dsnv.arr);
   setLocalStorage();
+  $("#myModal").modal("hide");
 });
 
 function removeNhanVien(taiKhoan) {
@@ -237,7 +203,6 @@ function setLocalStorage() {
 
 function getLocalStorage() {
   if (localStorage.getItem("DSNV")) {
-    // JSON.parse: String => JSON
     dsnv.arr = JSON.parse(localStorage.getItem("DSNV"));
     renderTable(dsnv.arr);
   }
@@ -246,4 +211,6 @@ getLocalStorage();
 
 getEle("btnThem").onclick = function () {
   getEle("btnCapNhat").style.display = "none";
+  getEle("btnThemNV").style.display = "block";
+  document.getElementById("modal__form").reset();
 };
