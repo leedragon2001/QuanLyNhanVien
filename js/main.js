@@ -151,11 +151,14 @@ getEle("btnThemNV").addEventListener("click", function (e) {
   e.preventDefault();
   var nv = layThongTinNV(true);
   if (nv) {
+    console.log("a");
     dsnv.themNV(nv);
     renderTable(dsnv.arr);
     setLocalStorage();
   }
-  $("#myModal").modal("hide");
+  if (isValid) {
+    $("#myModal").modal("hide");
+  }
 });
 
 function editSinhVien(taiKhoan) {
@@ -182,7 +185,9 @@ getEle("btnCapNhat").addEventListener("click", function (e) {
   dsnv.capNhatNV(nv);
   renderTable(dsnv.arr);
   setLocalStorage();
-  $("#myModal").modal("hide");
+  if (isValid) {
+    $("#myModal").modal("hide");
+  }
 });
 
 function removeNhanVien(taiKhoan) {
@@ -213,4 +218,5 @@ getEle("btnThem").onclick = function () {
   getEle("btnCapNhat").style.display = "none";
   getEle("btnThemNV").style.display = "block";
   document.getElementById("modal__form").reset();
+  getEle("tknv").disabled = false;
 };
